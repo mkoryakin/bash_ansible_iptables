@@ -1,0 +1,13 @@
+[db] #mysql server
+ db ansible_ssh_host=<ip>
+
+[core] #mongoDB server
+ core ansible_ssh_host=<ip>
+
+[core2]
+ core2 ansible_ssh_host=<ip>
+
+[databases:children]
+ db
+ core
+ core2

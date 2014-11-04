@@ -1,0 +1,41 @@
+---
+- hosts: databases
+  remote_user: deploy
+  tasks:
+
+    - name: whitelist IP
+      sudo: yes
+      sudo_user: root
+      command: add_ip -a {{ ip }}
+      tags:
+         - add
+
+    - name: delist IP
+      sudo: yes
+      sudo_user: root
+      command: sudo add_ip -d {{ ip }}
+      tags:
+         - del
+
+    - name: whitelist IP for rabbitmq
+      sudo: yes
+      sudo_user: root  
+      command: add_ip -a {{ ip }} {{ item }}
+      tags:   
+         - add_rabbitmq
+      with_items:
+         - 15672
+         - 5672
+      when: inventory_hostname == "db"
+
+    - name: whitelist IP
+      sudo: yes
+      sudo_user: root  
+      command: add_ip -d {{ ip }} {{ item }}
+      tags:   
+         - del_rabbitmq
+      with_items:
+         - 15672
+         - 5672
+      when: inventory_hostname == "db"
+
